@@ -6,7 +6,7 @@ including intent classification, safety assessment, and response generation.
 """
 
 import json
-import os
+import logging
 from typing import Dict, Any, Optional
 from pathlib import Path
 
@@ -21,6 +21,8 @@ from .schemas import (
 )
 from .classifier import create_classifier
 from .safety import create_safety_manager
+from .retrieval import create_retrieval_system
+from .recommender import create_recommendation_engine
 
 
 # Initialize FastAPI application
@@ -41,14 +43,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Initialize components
+# Initialize pipeline components
 classifier = create_classifier()
 safety_manager = create_safety_manager()
+retrieval_system = create_retrieval_system()
+recommendation_engine = create_recommendation_engine()
 
 # Data file paths
 DATA_DIR = Path(__file__).parent / "data"
 PRODUCTS_FILE = DATA_DIR / "products.json"
 KNOWLEDGE_FILE = DATA_DIR / "parenting_knowledge.json"
+
+# Configure logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 # In-memory data storage (loaded from JSON files)
 products_data: Dict[str, Any] = {}
@@ -95,8 +103,8 @@ async def root():
         "version": "1.0.0",
         "description": "Safety-aware AI assistant for parenting decisions",
         "endpoints": {
+            "analyze": "/analyze - Complete pipeline analysis",
             "classify": "/classify - Classify user intent",
-            "query": "/query - Process user query with safety assessment",
             "health": "/health - Health check endpoint"
         }
     }
@@ -105,12 +113,28 @@ async def root():
 @app.get("/health")
 async def health_check():
     """Health check endpoint."""
-    return {
-        "status": "healthy",
-        "data_loaded": len(products_data.get("products", [])) > 0 and len(knowledge_data.get("knowledge", [])) > 0,
-        "products_count": len(products_data.get("products", [])),
-        "knowledge_count": len(knowledge_data.get("knowledge", []))
-    }
+    try:
+        products_count = len(retrieval_system.products_data)
+        knowledge_count = len(retrieval_system.knowledge_data)
+        
+        return {
+            "status": "healthy",
+            "data_loaded": products_count > 0 and knowledge_count > 0,
+            "products_count": products_count,
+            "knowledge_count": knowledge_count,
+            "components": {
+                "classifier": "ready",
+                "safety_manager": "ready", 
+                "retrieval_system": "ready",
+                "recommendation_engine": "ready"
+            }
+        }
+    except Exception as e:
+        logger.error(f"Health check failed: {e}")
+        return {
+            "status": "unhealthy",
+            "error": str(e)
+        }
 
 
 @app.post("/classify")
@@ -122,11 +146,15 @@ async def classify_intent(user_query: UserQuery) -> ApiResponse:
     but does not generate recommendations or retrieve data.
     """
     try:
+        logger.info(f"Classifying intent for query: {user_query.query[:100]}...")
+        
         # Classify intent
         intent_result = classifier.classify_intent(user_query.query)
         
         # Perform safety assessment
         safety_assessment = safety_manager.assess_safety(user_query.query, intent_result.intent)
+        
+        logger.info(f"Intent classified: {intent_result.intent.value}, Safety: {safety_assessment.safety_level.value}")
         
         return ApiResponse(
             success=True,
@@ -145,6 +173,7 @@ async def classify_intent(user_query: UserQuery) -> ApiResponse:
         )
         
     except Exception as e:
+        logger.error(f"Classification failed: {e}")
         return ApiResponse(
             success=False,
             error=f"Classification failed: {str(e)}",
@@ -152,23 +181,33 @@ async def classify_intent(user_query: UserQuery) -> ApiResponse:
         )
 
 
-@app.post("/query")
-async def process_query(user_query: UserQuery) -> ApiResponse:
+@app.post("/analyze")
+async def analyze_query(user_query: UserQuery) -> ApiResponse:
     """
-    Process user query with full response generation.
+    Complete pipeline analysis of user query.
     
-    This endpoint performs intent classification, safety assessment,
-    and generates appropriate responses based on the intent type.
+    This endpoint performs the full end-to-end workflow:
+    1. Intent classification
+    2. Safety assessment
+    3. Retrieval (if safe)
+    4. Recommendation generation (if safe)
+    5. Structured response
     """
     try:
-        # Classify intent
+        logger.info(f"Starting analysis for query: {user_query.query[:100]}...")
+        
+        # Step 1: Classify intent
         intent_result = classifier.classify_intent(user_query.query)
+        logger.info(f"Intent: {intent_result.intent.value} (confidence: {intent_result.confidence.score:.2f})")
         
-        # Perform safety assessment
+        # Step 2: Safety assessment
         safety_assessment = safety_manager.assess_safety(user_query.query, intent_result.intent)
+        logger.info(f"Safety level: {safety_assessment.safety_level.value}")
         
-        # Check if it's safe to proceed
+        # Step 3: Check if safe to proceed
         if not safety_manager.is_safe_to_proceed(safety_assessment):
+            logger.info("Query not safe to proceed - returning health-sensitive response")
+            
             # Handle health-sensitive or dangerous queries
             health_response = safety_manager.create_health_sensitive_response(
                 user_query.query, 
@@ -182,191 +221,103 @@ async def process_query(user_query: UserQuery) -> ApiResponse:
                 safety_assessment=safety_assessment,
                 metadata={
                     "response_type": "health_sensitive_refusal",
-                    "safety_action": "refused_medical_advice"
+                    "safety_action": "refused_medical_advice",
+                    "pipeline_steps": ["classification", "safety_assessment", "refusal"]
                 }
             )
         
-        # Process based on intent type
+        # Step 4: Process based on intent type
         response_data = None
         response_type = None
+        sources = []
         
         if intent_result.intent == IntentType.PRODUCT_RECOMMENDATION:
-            response_data, response_type = await handle_product_recommendation(user_query, intent_result)
+            logger.info("Processing product recommendation")
+            response_data = recommendation_engine.generate_product_recommendations(
+                user_query.query, 
+                intent_result.confidence.score
+            )
+            response_type = "product_recommendation"
+            sources = ["local_products_database"]
             
         elif intent_result.intent == IntentType.INFORMATIONAL_QUERY:
-            response_data, response_type = await handle_informational_query(user_query, intent_result)
+            logger.info("Processing informational query")
+            response_data = recommendation_engine.generate_informational_response(
+                user_query.query,
+                intent_result.confidence.score
+            )
+            response_type = "informational_response"
+            sources = ["local_knowledge_database"]
             
         elif intent_result.intent == IntentType.COMPARISON_QUERY:
-            response_data, response_type = await handle_comparison_query(user_query, intent_result)
+            logger.info("Processing comparison query")
+            response_data = recommendation_engine.generate_comparison_response(
+                user_query.query,
+                intent_result.confidence.score
+            )
+            response_type = "comparison_response"
+            sources = ["local_products_database"]
             
         else:
             # Fallback for any unexpected cases
+            logger.warning(f"Unexpected intent type: {intent_result.intent.value}")
             response_data = {
                 "message": "I'm here to help with parenting decisions, but I cannot provide medical advice. For health concerns, please consult a healthcare professional.",
                 "safety_note": safety_manager.get_safety_disclaimer()
             }
             response_type = "general_safety_response"
+            sources = []
+        
+        # Add uncertainty messaging if confidence is low
+        uncertainty_note = None
+        if hasattr(response_data, 'confidence') and response_data.confidence.score < 0.3:
+            uncertainty_note = "Low confidence results - consider expanding search criteria or consulting professionals."
+        elif isinstance(response_data, dict) and 'confidence' in response_data:
+            if response_data['confidence'].get('score', 1.0) < 0.3:
+                uncertainty_note = "Low confidence results - consider expanding search criteria or consulting professionals."
+        
+        logger.info(f"Analysis complete. Response type: {response_type}")
         
         return ApiResponse(
             success=True,
-            data=response_data,
+            data=response_data.dict() if hasattr(response_data, 'dict') else response_data,
             intent_classification=intent_result,
             safety_assessment=safety_assessment,
             metadata={
                 "response_type": response_type,
-                "data_sources": ["local_json_files"]
+                "sources": sources,
+                "uncertainty_note": uncertainty_note,
+                "pipeline_steps": ["classification", "safety_assessment", "retrieval", "recommendation"]
             }
         )
         
     except Exception as e:
+        logger.error(f"Query analysis failed: {e}")
         return ApiResponse(
             success=False,
             error=f"Query processing failed: {str(e)}",
-            metadata={"error_type": "processing_error"}
+            metadata={
+                "error_type": "processing_error",
+                "pipeline_steps": ["classification", "safety_assessment", "error"]
+            }
         )
 
 
-async def handle_product_recommendation(user_query: UserQuery, intent_result) -> tuple[Dict[str, Any], str]:
-    """Handle product recommendation queries."""
-    try:
-        # Simple keyword-based product search (can be enhanced)
-        query_lower = user_query.query.lower()
-        all_products = products_data.get("products", [])
-        
-        # Filter products based on keywords
-        matching_products = []
-        for product in all_products:
-            product_text = f"{product.get('name', '')} {product.get('category', '')} {' '.join(product.get('features', []))}".lower()
-            if any(keyword in product_text for keyword in ['baby', 'infant', 'toddler', 'child']):
-                matching_products.append(product)
-        
-        # Convert to ProductInfo objects
-        product_infos = []
-        for product in matching_products[:5]:  # Limit to top 5
-            product_infos.append(ProductInfo(
-                id=product.get('id', ''),
-                name=product.get('name', ''),
-                category=product.get('category', ''),
-                price_range=product.get('price_range'),
-                features=product.get('features', []),
-                safety_rating=product.get('safety_rating'),
-                recommended_age=product.get('recommended_age')
-            ))
-        
-        # Create recommendation result
-        confidence = ConfidenceScore(
-            score=min(intent_result.confidence.score, 0.8),  # Cap confidence for recommendations
-            reasoning="Based on keyword matching against product database"
-        )
-        
-        result = RecommendationResult(
-            products=product_infos,
-            reasoning=f"Found {len(product_infos)} products matching your query for baby/child items.",
-            confidence=confidence,
-            safety_note="Always verify product safety ratings and age appropriateness before purchase."
-        )
-        
-        return result.dict(), "product_recommendation"
-        
-    except Exception as e:
-        raise Exception(f"Product recommendation failed: {str(e)}")
-
-
-async def handle_informational_query(user_query: UserQuery, intent_result) -> tuple[Dict[str, Any], str]:
-    """Handle informational queries about parenting."""
-    try:
-        # Simple keyword-based knowledge search
-        query_lower = user_query.query.lower()
-        all_knowledge = knowledge_data.get("knowledge", [])
-        
-        # Filter knowledge based on keywords
-        matching_knowledge = []
-        for knowledge in all_knowledge:
-            knowledge_text = f"{knowledge.get('title', '')} {knowledge.get('content', '')} {knowledge.get('category', '')}".lower()
-            if any(keyword in knowledge_text for keyword in ['parenting', 'baby', 'infant', 'toddler', 'child', 'development']):
-                matching_knowledge.append(knowledge)
-        
-        # Convert to KnowledgeInfo objects
-        knowledge_infos = []
-        for knowledge in matching_knowledge[:3]:  # Limit to top 3
-            knowledge_infos.append(KnowledgeInfo(
-                id=knowledge.get('id', ''),
-                title=knowledge.get('title', ''),
-                category=knowledge.get('category', ''),
-                content=knowledge.get('content', ''),
-                source=knowledge.get('source'),
-                age_relevance=knowledge.get('age_relevance')
-            ))
-        
-        # Create informational result
-        confidence = ConfidenceScore(
-            score=min(intent_result.confidence.score, 0.7),  # Cap confidence for informational content
-            reasoning="Based on keyword matching against parenting knowledge database"
-        )
-        
-        result = InformationalResult(
-            knowledge=knowledge_infos,
-            summary=f"Found {len(knowledge_infos)} relevant information entries about parenting and child development.",
-            confidence=confidence,
-            safety_note="This information is for general guidance only and not a substitute for professional advice."
-        )
-        
-        return result.dict(), "informational_response"
-        
-    except Exception as e:
-        raise Exception(f"Informational query failed: {str(e)}")
-
-
-async def handle_comparison_query(user_query: UserQuery, intent_result) -> tuple[Dict[str, Any], str]:
-    """Handle product comparison queries."""
-    try:
-        # For now, return a limited comparison response
-        # In a full implementation, this would extract specific products to compare
-        query_lower = user_query.query.lower()
-        all_products = products_data.get("products", [])
-        
-        # Find products mentioned in comparison
-        comparison_products = []
-        for product in all_products[:3]:  # Limit for demo
-            comparison_products.append(ProductInfo(
-                id=product.get('id', ''),
-                name=product.get('name', ''),
-                category=product.get('category', ''),
-                price_range=product.get('price_range'),
-                features=product.get('features', []),
-                safety_rating=product.get('safety_rating'),
-                recommended_age=product.get('recommended_age')
-            ))
-        
-        # Create comparison matrix
-        comparison_matrix = {
-            "categories": list(set(p.category for p in comparison_products)),
-            "price_ranges": list(set(p.price_range for p in comparison_products if p.price_range)),
-            "safety_ratings": [p.safety_rating for p in comparison_products if p.safety_rating]
-        }
-        
-        confidence = ConfidenceScore(
-            score=min(intent_result.confidence.score, 0.6),  # Lower confidence for comparisons
-            reasoning="Limited comparison based on available product data"
-        )
-        
-        result = ComparisonResult(
-            products=comparison_products,
-            comparison_matrix=comparison_matrix,
-            recommendation="Consider safety ratings, age appropriateness, and your specific needs when making a decision.",
-            confidence=confidence,
-            safety_note="Always research products thoroughly and consult professionals when needed."
-        )
-        
-        return result.dict(), "comparison_response"
-        
-    except Exception as e:
-        raise Exception(f"Comparison query failed: {str(e)}")
+@app.post("/query")
+async def process_query(user_query: UserQuery) -> ApiResponse:
+    """
+    Legacy endpoint for backward compatibility.
+    
+    Redirects to /analyze for the complete pipeline.
+    """
+    logger.info("Legacy /query endpoint called - redirecting to /analyze")
+    return await analyze_query(user_query)
 
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request, exc):
     """Global exception handler for unhandled errors."""
+    logger.error(f"Unhandled exception: {exc}")
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         content=ApiResponse(
@@ -377,6 +328,21 @@ async def global_exception_handler(request, exc):
     )
 
 
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request, exc):
+    """HTTP exception handler."""
+    logger.warning(f"HTTP exception: {exc.status_code} - {exc.detail}")
+    return JSONResponse(
+        status_code=exc.status_code,
+        content=ApiResponse(
+            success=False,
+            error=exc.detail,
+            metadata={"error_type": "http_error", "status_code": exc.status_code}
+        ).dict()
+    )
+
+
 if __name__ == "__main__":
     import uvicorn
+    logger.info("Starting Parent Decision Copilot API server")
     uvicorn.run(app, host="0.0.0.0", port=8000)
