@@ -1,0 +1,84 @@
+{
+  "knowledge": [
+    {
+      "id": "know_001",
+      "title": "Establishing Healthy Sleep Routines for Newborns",
+      "category": "sleep routines",
+      "content": "Newborns typically sleep 16-17 hours daily in 2-4 hour segments. Create a consistent bedtime routine with dim lighting, gentle sounds, and calm activities. Place babies on their back in a crib with a firm mattress and no loose bedding. Room temperature should be comfortable (68-72°F or 20-22°C). Watch for tired signs like rubbing eyes, fussiness, or yawning to time sleep appropriately.",
+      "source": "American Academy of Pediatrics Sleep Guidelines",
+      "age_relevance": "0-6 months"
+    },
+    {
+      "id": "know_002",
+      "title": "Teething Relief and Comfort Strategies",
+      "category": "teething",
+      "content": "Teething typically begins between 4-7 months. Provide relief with clean, chilled teething rings or washcloths. Gently massage baby's gums with clean fingers. Offer safe, BPA-free teething toys. Avoid teething necklaces or bracelets due to choking hazards. If baby seems uncomfortable, consult with a pediatrician about appropriate pain relief options. Excessive drooling is normal but monitor for skin irritation around the mouth and chin.",
+      "source": "Pediatric Dental Association Guidelines",
+      "age_relevance": "4-24 months"
+    },
+    {
+      "id": "know_003",
+      "title": "Safe Bottle Feeding Practices",
+      "category": "feeding guidance",
+      "content": "Hold baby upright during feeding to prevent ear infections and reduce reflux. Test formula temperature on your wrist (should be lukewarm). Never prop bottles as this increases choking risk. Follow infant hunger cues rather than strict schedules. Burp baby midway and after feeding. Discard leftover formula after 1 hour to prevent bacterial growth. Clean bottles thoroughly after each use with hot, soapy water or in dishwasher.",
+      "source": "World Health Organization Infant Feeding Guidelines",
+      "age_relevance": "0-12 months"
+    },
+    {
+      "id": "know_004",
+      "title": "Baby Bottle Hygiene and Safety",
+      "category": "bottle hygiene",
+      "content": "Sterilize bottles before first use and weekly thereafter. Clean bottles immediately after use to prevent milk residue buildup. Use bottle brushes to reach all surfaces. Check bottle nipples regularly for damage and replace if worn or torn. Avoid using harsh chemicals or abrasive cleaners. Store clean bottles in a covered, dry area. For travel, consider pre-sterilized disposable bottle liners or bring pre-measured formula powder.",
+      "source": "Centers for Disease Control and Prevention",
+      "age_relevance": "0-12 months"
+    },
+    {
+      "id": "know_005",
+      "title": "Managing Sensitive Skin in Babies",
+      "category": "sensitive skin care",
+      "content": "Use fragrance-free, hypoallergenic products designed for baby skin. Bathe baby 2-3 times weekly in lukewarm water (not hot). Pat skin dry gently, don't rub. Apply moisturizer within 3 minutes of bathing to lock in moisture. Use gentle, unscented detergents for baby clothes. Avoid over-bathing which can strip natural oils. Dress baby in breathable, soft fabrics like cotton. Contact pediatrician if persistent rashes or skin irritation occur.",
+      "source": "American Academy of Dermatology",
+      "age_relevance": "0-24 months"
+    },
+    {
+      "id": "know_006",
+      "title": "Stroller Safety Guidelines",
+      "category": "stroller safety",
+      "content": "Always use the 5-point harness system correctly. Never leave baby unattended in stroller. Apply brakes when stationary. Avoid hanging heavy bags on handles which can cause tipping. Check stroller stability before each use. Ensure all locking mechanisms are fully engaged. Don't use stroller on stairs or escalators. Follow weight limits and age recommendations. Regularly inspect wheels, brakes, and frame for wear and tear.",
+      "source": "Juvenile Products Manufacturers Association",
+      "age_relevance": "6-48 months"
+    },
+    {
+      "id": "know_007",
+      "title": "Developmental Milestones: 0-6 Months",
+      "category": "developmental milestones",
+      "content": "By 2 months: lifts head briefly during tummy time, follows objects with eyes, responds to sounds. By 4 months: holds head steady, pushes up on arms during tummy time, brings hands to mouth, babbles. By 6 months: rolls over both ways, sits with support, reaches for toys, responds to own name. Remember each baby develops at their own pace. Consult pediatrician if you notice significant delays or loss of previously acquired skills.",
+      "source": "CDC Developmental Milestones",
+      "age_relevance": "0-6 months"
+    },
+    {
+      "id": "know_008",
+      "title": "Diaper Changing Safety and Hygiene",
+      "category": "diaper care",
+      "content": "Never leave baby unattended on changing table - keep one hand on baby at all times. Clean girls from front to back to prevent infection. Allow skin to air dry completely before applying new diaper. Use barrier cream for sensitive skin or rash prevention. Change diapers frequently to prevent skin irritation. Store diapers in clean, dry area. Dispose of soiled diapers properly in sealed containers. Watch for signs of diaper rash and treat promptly.",
+      "source": "American Academy of Pediatrics",
+      "age_relevance": "0-36 months"
+    },
+    {
+      "id": "know_009",
+      "title": "Baby Carrier Safety and Ergonomics",
+      "category": "baby carrier safety",
+      "content": "Ensure baby's airway remains clear and visible - chin should be off chest. Support baby's back in natural 'C' shape. Baby should be close enough to kiss. Use carriers with proper weight distribution and adjustable straps. Check all buckles and straps before each use. Follow manufacturer's weight and age guidelines. Avoid activities that could cause falls while carrying baby. Be cautious in hot weather to prevent overheating.",
+      "source": "International Babywearing Institute",
+      "age_relevance": "3-24 months"
+    },
+    {
+      "id": "know_010",
+      "title": "Creating a Safe Sleep Environment",
+      "category": "sleep safety",
+      "content": "Use a firm mattress with tightly fitted sheet. Keep crib free of pillows, bumpers, loose bedding, and toys. Room-sharing is recommended for first 6 months, but bed-sharing is not advised. Maintain comfortable room temperature. Use baby monitor if desired, but don't rely on it exclusively. Ensure crib meets current safety standards with no missing parts or broken hardware. Mobiles should be removed when baby can push up on hands.",
+      "source": "Safe to Sleep Campaign, National Institutes of Health",
+      "age_relevance": "0-12 months"
+    }
+  ]
+}

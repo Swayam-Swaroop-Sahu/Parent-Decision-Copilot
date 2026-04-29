@@ -1,0 +1,244 @@
+{
+  "products": [
+    {
+      "id": "prod_001",
+      "name": "GentleTouch Baby Wipes - Sensitive Skin",
+      "category": "baby wipes",
+      "price_aed": 45.99,
+      "features": [
+        "Hypoallergenic formula",
+        "99% purified water",
+        "Alcohol-free and paraben-free",
+        "Biodegradable fibers",
+        "Dermatologically tested"
+      ],
+      "safety_rating": 4.8,
+      "recommended_age": "0+ months",
+      "tags": ["sensitive skin", "newborn", "hypoallergenic", "eco-friendly"]
+    },
+    {
+      "id": "prod_002",
+      "name": "AquaFlow Anti-Colic Feeding Bottles - Set of 3",
+      "category": "feeding bottles",
+      "price_aed": 89.99,
+      "features": [
+        "Advanced anti-colic vent system",
+        "BPA-free wide-neck design",
+        "Slow-flow silicone nipples",
+        "Easy to clean wide mouth",
+        "Measurement markings in ml"
+      ],
+      "safety_rating": 4.7,
+      "recommended_age": "0-6 months",
+      "tags": ["anti-colic", "newborn", "BPA-free", "easy cleaning"]
+    },
+    {
+      "id": "prod_003",
+      "name": "DreamDry Premium Diapers - Size 1 (Newborn)",
+      "category": "diapers",
+      "price_aed": 125.99,
+      "features": [
+        "Ultra-absorbent core technology",
+        "Wetness indicator line",
+        "Breathable soft outer layer",
+        "Hypoallergenic inner lining",
+        "Umbilical cord cutout"
+      ],
+      "safety_rating": 4.9,
+      "recommended_age": "0-2 months",
+      "tags": ["newborn", "overnight protection", "sensitive skin", "wetness indicator"]
+    },
+    {
+      "id": "prod_004",
+      "name": "PureCare Baby Lotion - Fragrance Free",
+      "category": "baby lotions",
+      "price_aed": 65.99,
+      "features": [
+        "Pediatrician tested formula",
+        "Fragrance-free and hypoallergenic",
+        "Natural ingredients including shea butter",
+        "Non-greasy quick absorption",
+        "Dermatologically approved"
+      ],
+      "safety_rating": 4.6,
+      "recommended_age": "0+ months",
+      "tags": ["fragrance free", "sensitive skin", "natural ingredients", "pediatrician tested"]
+    },
+    {
+      "id": "prod_005",
+      "name": "SootheGel Teething Rings - 3 Pack",
+      "category": "teething toys",
+      "price_aed": 55.99,
+      "features": [
+        "BPA-free food-grade silicone",
+        "Refrigerator safe for cooling",
+        "Multiple textures for gum relief",
+        "Easy to grip design",
+        "Dishwasher safe"
+      ],
+      "safety_rating": 4.5,
+      "recommended_age": "3-12 months",
+      "tags": ["BPA-free", "refrigerator safe", "textured", "easy grip"]
+    },
+    {
+      "id": "prod_006",
+      "name": "WatchOver HD Baby Monitor with Night Vision",
+      "category": "baby monitors",
+      "price_aed": 299.99,
+      "features": [
+        "1080p HD video quality",
+        "Infrared night vision",
+        "Two-way audio communication",
+        "Temperature and humidity sensors",
+        "Mobile app connectivity"
+      ],
+      "safety_rating": 4.4,
+      "recommended_age": "0+ months",
+      "tags": ["HD video", "night vision", "two-way audio", "smart connectivity"]
+    },
+    {
+      "id": "prod_007",
+      "name": "TravelLite Compact Stroller - Urban Edition",
+      "category": "strollers",
+      "price_aed": 899.99,
+      "features": [
+        "One-hand fold mechanism",
+        "Lightweight aluminum frame",
+        "5-point safety harness",
+        "Adjustable recline positions",
+        "Travel bag included"
+      ],
+      "safety_rating": 4.7,
+      "recommended_age": "6-36 months",
+      "tags": ["travel friendly", "lightweight", "compact fold", "urban use"]
+    },
+    {
+      "id": "prod_008",
+      "name": "ComfortFit Baby Carrier - Ergonomic Design",
+      "category": "baby carriers",
+      "price_aed": 349.99,
+      "features": [
+        "Ergonomic hip-healthy design",
+        "Breathable mesh fabric",
+        "Multiple carrying positions",
+        "Adjustable waist belt",
+        "Padded shoulder straps"
+      ],
+      "safety_rating": 4.6,
+      "recommended_age": "3-24 months",
+      "tags": ["ergonomic", "breathable", "hip healthy", "multi position"]
+    },
+    {
+      "id": "prod_009",
+      "name": "EcoWipes Bamboo Baby Wipes - Unscented",
+      "category": "baby wipes",
+      "price_aed": 52.99,
+      "features": [
+        "100% biodegradable bamboo fibers",
+        "Plant-based ingredients",
+        "Compostable packaging",
+        "Unscented formula",
+        "Vegan and cruelty-free"
+      ],
+      "safety_rating": 4.9,
+      "recommended_age": "0+ months",
+      "tags": ["eco-friendly", "bamboo", "biodegradable", "vegan"]
+    },
+    {
+      "id": "prod_010",
+      "name": "SafeFeed Glass Baby Bottles - Set of 2",
+      "category": "feeding bottles",
+      "price_aed": 119.99,
+      "features": [
+        "Borosilicate glass construction",
+        "Silicone protective sleeve",
+        "Wide-neck design for easy cleaning",
+        "Slow-flow nipples included",
+        "Dishwasher safe"
+      ],
+      "safety_rating": 4.8,
+      "recommended_age": "0-12 months",
+      "tags": ["glass", "chemical free", "thermal sleeve", "allergy safe"]
+    },
+    {
+      "id": "prod_011",
+      "name": "ActiveFit Training Diapers - Size 4",
+      "category": "diapers",
+      "price_aed": 145.99,
+      "features": [
+        "Stretchy waistband for active toddlers",
+        "Extra absorbent core",
+        "Breathable side panels",
+        "Wetness indicator",
+        "Fun cartoon designs"
+      ],
+      "safety_rating": 4.5,
+      "recommended_age": "18-36 months",
+      "tags": ["toddler", "training", "active fit", "stretchy waist"]
+    },
+    {
+      "id": "prod_012",
+      "name": "CalmBaby Moisturizing Lotion - Lavender",
+      "category": "baby lotions",
+      "price_aed": 58.99,
+      "features": [
+        "Natural lavender essential oil",
+        "Organic aloe vera",
+        "Vitamin E enriched",
+        "Non-greasy formula",
+        "Calming bedtime scent"
+      ],
+      "safety_rating": 4.3,
+      "recommended_age": "3+ months",
+      "tags": ["bedtime", "lavender", "organic", "moisturizing"]
+    },
+    {
+      "id": "prod_013",
+      "name": "CoolBite Teething Keys - Silicone",
+      "category": "teething toys",
+      "price_aed": 42.99,
+      "features": [
+        "Multiple teething textures",
+        "BPA-free food-grade silicone",
+        "Easy to hold key ring design",
+        "Freezer safe for extra cooling",
+        "Bright colors for visual stimulation"
+      ],
+      "safety_rating": 4.4,
+      "recommended_age": "3-9 months",
+      "tags": ["textured", "freezer safe", "easy hold", "colorful"]
+    },
+    {
+      "id": "prod_014",
+      "name": "SmartSense Baby Monitor with Movement Detection",
+      "category": "baby monitors",
+      "price_aed": 449.99,
+      "features": [
+        "Movement and breathing detection",
+        "Real-time alerts to smartphone",
+        "Room temperature monitoring",
+        "Night vision camera",
+        "Two-way communication"
+      ],
+      "safety_rating": 4.5,
+      "recommended_age": "0-24 months",
+      "tags": ["movement detection", "smart alerts", "breathing monitor", "premium"]
+    },
+    {
+      "id": "prod_015",
+      "name": "AllTerrain 3-Wheel Stroller - Adventure Edition",
+      "category": "strollers",
+      "price_aed": 1299.99,
+      "features": [
+        "All-terrain air-filled tires",
+        "One-hand quick fold",
+        "Adjustable suspension system",
+        "Large storage basket",
+        "UV-protected canopy"
+      ],
+      "safety_rating": 4.8,
+      "recommended_age": "6-48 months",
+      "tags": ["all terrain", "jogging", "adventure", "premium"]
+    }
+  ]
+}
